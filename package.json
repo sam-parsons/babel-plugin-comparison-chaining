@@ -13,10 +13,16 @@
     "type": "git",
     "url": "git+https://github.com/sam-parsons/babel-plugin-comparison-chaining.git"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Sam Parsons",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/sam-parsons/babel-plugin-comparison-chaining/issues"
   },
-  "homepage": "https://github.com/sam-parsons/babel-plugin-comparison-chaining#readme"
+  "homepage": "https://github.com/sam-parsons/babel-plugin-comparison-chaining#readme",
+  "devDependencies": {
+    "@babel/cli": "^7.11.6",
+    "@babel/core": "^7.11.6",
+    "chai": "^4.2.0",
+    "mocha": "^8.1.3"
+  }
 }
