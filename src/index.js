@@ -3,7 +3,7 @@ function parseExpressionStatement(node, array) {
     array.push(node.right.value);
     array.push(node.operator);
     parseExpressionStatement(node.left, array);
-  } else if (node.type === 'NumericLiteral') {
+  } else if (node.type === 'NumericLiteral' || node.type === 'StringLiteral') { // need to make this line generalized
     array.push(node.value);
   } else return;  
 }
@@ -14,9 +14,17 @@ function generateExpressionStatement(t, array) {
   return t.expressionStatement(t.logicalExpression('&&', 
           generateLogicalExpression(t, array.slice(0, array.length - 2)), 
           t.binaryExpression(endOfArr[1], 
-              t.numericLiteral(endOfArr[0]), 
-              t.numericLiteral(endOfArr[2]))
+              createLiteral(endOfArr[0], t), 
+              createLiteral(endOfArr[2], t))
         ));
+}
+
+function createLiteral(node, types) {
+  switch (typeof node) {
+    case "string": return types.stringLiteral(node);
+    case "number": return types.numericLiteral(node)
+    default: return
+  }
 }
 
 function generateLogicalExpression(t, array) {
@@ -24,22 +32,21 @@ function generateLogicalExpression(t, array) {
 
   if (array.length < 6) return t.logicalExpression('&&', 
                                     t.binaryExpression(array[array.length - 4], 
-                                      t.numericLiteral(array[array.length - 5]), 
-                                      t.numericLiteral(array[array.length - 3])), 
+                                      createLiteral(array[array.length - 5], t), 
+                                      createLiteral(array[array.length - 3], t)), 
                                     t.binaryExpression(array[array.length - 2], 
-                                      t.numericLiteral(array[array.length - 3]), 
-                                      t.numericLiteral(array[array.length - 1])))
+                                      createLiteral(array[array.length - 3], t), 
+                                      createLiteral(array[array.length - 1], t)))
 
   return t.logicalExpression('&&', 
                   generateLogicalExpression(t, array.slice(0, array.length - 2)), 
                   t.binaryExpression(endOfArr[1], 
-                    t.numericLiteral(endOfArr[0]), 
-                    t.numericLiteral(endOfArr[2])))
+                    createLiteral(endOfArr[0], t), 
+                    createLiteral(endOfArr[2], t)))
 }
 
 
 module.exports = ({ types: t }) => ({
-  // return {
     visitor: {
       ExpressionStatement(path) {
         // also check if left side of binary expression is not equal to a binary express
@@ -62,5 +69,4 @@ module.exports = ({ types: t }) => ({
         return;
       }
     }
-  // };
 });
