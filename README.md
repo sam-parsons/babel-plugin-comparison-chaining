@@ -1,17 +1,27 @@
 # babel-plugin-comparison-chaining
 
-Unlike the discipline of mathematics, JavaScript interpreters don't recognize chains of comparison operators as a linear sequence, but as recursive calls involving the left-most node and everything to the right of the operator.  If a developer wishes to write conditionally chained expressions that are linearly evaluated, this plugin is of use.
+Unlike the discipline of mathematics, JavaScript interpreters don't recognize chains of comparison operators as a linear sequence, but as recursive calls compare the right-most node and everything to the left of the operator.  If a developer wishes to write conditionally chained expressions that are linearly evaluated, this plugin is of use.
 
 ## Examples
 
+JavaScript will recursively evaluate the right-most node compared against whatever is on the left.
+
 ```javascript
-1 < 6 < 4 < 2;
+// written
+1 < 6 < 4 < 2 < 7;
+
+//evaluated
+    1 < 6 < 4 < 2 < 7;
+   (1 < 6 < 4 < 2) < 7 
+  ((1 < 6 < 4) < 2) < 7;
+ (((1 < 6) < 4) < 2) < 7;
+((((1) < 6) < 4) < 2) < 7;
 ```
 
-Turn into
+Written expression evaluated linearly
 
 ```javascript
-1 < 6 && 6 < 4 && 4 < 2;
+1 < 6 && 6 < 4 && 4 < 2 && 2 < 7;
 ```
 
 ## Installation
