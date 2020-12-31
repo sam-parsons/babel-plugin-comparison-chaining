@@ -5,13 +5,17 @@
  */
 function generateExpressionStatement(t, array) {
   const endOfArr = array.slice(array.length - 3);
+  const binaryOperator = endOfArr[1];
+  const leftValue = endOfArr[0];
+  const rightValue = endOfArr[2];
+  const remainderExpression = array.slice(0, array.length - 2);
 
   return t.expressionStatement(t.logicalExpression(
     '&&', 
-    generateLogicalExpression(t, array.slice(0, array.length - 2)), 
-    t.binaryExpression(endOfArr[1], 
-      createLiteral(endOfArr[0], t), 
-      createLiteral(endOfArr[2], t))
+    generateLogicalExpression(t, remainderExpression), 
+    t.binaryExpression(binaryOperator, 
+      createLiteral(leftValue, t), 
+      createLiteral(rightValue, t))
   ));
 }
 
@@ -37,21 +41,23 @@ function createLiteral(node, types) {
 function generateLogicalExpression(t, array) {
   const endOfArr = array.slice(array.length - 3);
 
-  if (array.length < 6) return t.logicalExpression(
-    '&&', 
-    t.binaryExpression(array[array.length - 4], 
-      createLiteral(array[array.length - 5], t), 
-      createLiteral(array[array.length - 3], t)), 
-    t.binaryExpression(array[array.length - 2], 
-      createLiteral(array[array.length - 3], t), 
-      createLiteral(array[array.length - 1], t)))
-
   return t.logicalExpression(
     '&&', 
-    generateLogicalExpression(t, array.slice(0, array.length - 2)), 
-    t.binaryExpression(endOfArr[1], 
-    createLiteral(endOfArr[0], t), 
-    createLiteral(endOfArr[2], t))
+    array.length < 6 ? // detecting end of logical expression
+      t.binaryExpression(
+        array[array.length - 4], 
+        createLiteral(array[array.length - 5], t), 
+        createLiteral(array[array.length - 3], t)
+      ) :
+      generateLogicalExpression(
+        t, 
+        array.slice(0, array.length - 2)
+      ), 
+    t.binaryExpression(
+      endOfArr[1], 
+      createLiteral(endOfArr[0], t), 
+      createLiteral(endOfArr[2], t)
+    )
   );
 }
 
