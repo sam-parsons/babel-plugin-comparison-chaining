@@ -1,3 +1,8 @@
+/**
+ * 
+ * @param {*} t 
+ * @param {*} array 
+ */
 function generateExpressionStatement(t, array) {
   const endOfArr = array.slice(array.length - 3);
 
@@ -10,6 +15,11 @@ function generateExpressionStatement(t, array) {
   ));
 }
 
+/**
+ * 
+ * @param {*} node 
+ * @param {*} types 
+ */
 function createLiteral(node, types) {
   switch (typeof node) {
     case "string": return types.stringLiteral(node);
@@ -19,6 +29,11 @@ function createLiteral(node, types) {
 }
 
 // need to refactor and comment
+/**
+ * 
+ * @param {*} t 
+ * @param {*} array 
+ */
 function generateLogicalExpression(t, array) {
   const endOfArr = array.slice(array.length - 3);
 
@@ -40,6 +55,11 @@ function generateLogicalExpression(t, array) {
   );
 }
 
+/**
+ * 
+ * @param {*} node 
+ * @param {*} array 
+ */
 function parseExpressionStatement(node, array) {
   if (node.type === 'BinaryExpression') {
     array.push(node.right.value);
