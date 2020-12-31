@@ -2,7 +2,7 @@
  * 
  * @param {*} t 
  * @param {*} array 
- */
+ */ // need to switch around parameters to conform to args, ..., types format
 function generateExpressionStatement(t, array) {
   const endOfArr = array.slice(array.length - 3);
   const binaryOperator = endOfArr[1];
@@ -84,19 +84,19 @@ module.exports = ({ types: t }) => (
         if (path.node.expression.type !== 'BinaryExpression') return;
         if (path.node.expression.left.type !== 'BinaryExpression') return;
 
-        //
+        // seeding array with first two value
         const array = [path.node.expression.right.value, path.node.expression.operator];
 
-        //
+        // recursively parse remaining expression
         parseExpressionStatement(path.node.expression.left, array); 
 
-        //
+        // elements now arranged in correct forward to back order
         array.reverse();
 
-        //
-        const newAST = generateExpressionStatement(t, array);
+        // create replacement expression
+        const replacementExpression = generateExpressionStatement(t, array);
 
-        path.replaceWith(newAST); 
+        path.replaceWith(replacementExpression); 
 
         return;
       }
