@@ -1,21 +1,21 @@
 /**
  * 
- * @param {*} t 
- * @param {*} array 
+ * @param {*} array
+ * @param {*} types
  */ // need to switch around parameters to conform to args, ..., types format
-function generateExpressionStatement(t, array) {
+function generateExpressionStatement(array, types) {
   const endOfArr = array.slice(array.length - 3);
   const binaryOperator = endOfArr[1];
   const leftValue = endOfArr[0];
   const rightValue = endOfArr[2];
   const remainderExpression = array.slice(0, array.length - 2);
 
-  return t.expressionStatement(t.logicalExpression(
+  return types.expressionStatement(types.logicalExpression(
     '&&', 
-    generateLogicalExpression(t, remainderExpression), 
-    t.binaryExpression(binaryOperator, 
-      createLiteral(leftValue, t), 
-      createLiteral(rightValue, t))
+    generateLogicalExpression(remainderExpression, types), 
+    types.binaryExpression(binaryOperator, 
+      createLiteral(leftValue, types), 
+      createLiteral(rightValue, types))
   ));
 }
 
@@ -35,23 +35,23 @@ function createLiteral(node, types) {
 // need to refactor and comment
 /**
  * 
- * @param {*} t 
  * @param {*} array 
+ * @param {*} types
  */
-function generateLogicalExpression(t, array) {
+function generateLogicalExpression(array, types) {
   const endOfArr = array.slice(array.length - 3);
   const endingLogicalExpressionArray = array.slice(0, array.length - 2);
 
-  return t.logicalExpression(
+  return types.logicalExpression(
     '&&', 
     array.length < 6 ? // detecting end of logical expression
       // transform last five elements into proper chaining
-      generateEndingBinaryExpression(array, t) : 
-      generateLogicalExpression(t, endingLogicalExpressionArray), 
-    t.binaryExpression(
+      generateEndingBinaryExpression(array, types) : 
+      generateLogicalExpression(endingLogicalExpressionArray, types), 
+    types.binaryExpression(
       endOfArr[1], 
-      createLiteral(endOfArr[0], t), 
-      createLiteral(endOfArr[2], t)
+      createLiteral(endOfArr[0], types), 
+      createLiteral(endOfArr[2], types)
     )
   );
 }
@@ -61,11 +61,11 @@ function generateLogicalExpression(t, array) {
  * @param {*} array 
  * @param {*} t 
  */
-function generateEndingBinaryExpression(array, t) {
-  return t.binaryExpression(
+function generateEndingBinaryExpression(array, types) {
+  return types.binaryExpression(
     array[1], 
-    createLiteral(array[0], t), 
-    createLiteral(array[2], t)
+    createLiteral(array[0], types), 
+    createLiteral(array[2], types)
   );
 }
 
@@ -102,7 +102,7 @@ module.exports = ({ types: t }) => (
         array.reverse();
 
         // create replacement expression
-        const replacementExpression = generateExpressionStatement(t, array);
+        const replacementExpression = generateExpressionStatement(array, t);
 
         path.replaceWith(replacementExpression); 
 
