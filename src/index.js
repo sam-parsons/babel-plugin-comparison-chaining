@@ -2,7 +2,7 @@
  * 
  * @param {*} array
  * @param {*} types
- */ // need to switch around parameters to conform to args, ..., types format
+ */
 function generateExpressionStatement(array, types) {
   const endOfArr = array.slice(array.length - 3);
   const binaryOperator = endOfArr[1];
@@ -32,7 +32,6 @@ function createLiteral(node, types) {
   }
 }
 
-// need to refactor and comment
 /**
  * 
  * @param {*} array 
@@ -40,6 +39,9 @@ function createLiteral(node, types) {
  */
 function generateLogicalExpression(array, types) {
   const endOfArr = array.slice(array.length - 3);
+  const operator = endOfArr[1];
+  const left = endOfArr[0];
+  const right = endOfArr[2];
   const endingLogicalExpressionArray = array.slice(0, array.length - 2);
 
   return types.logicalExpression(
@@ -49,9 +51,9 @@ function generateLogicalExpression(array, types) {
       generateEndingBinaryExpression(array, types) : 
       generateLogicalExpression(endingLogicalExpressionArray, types), 
     types.binaryExpression(
-      endOfArr[1], 
-      createLiteral(endOfArr[0], types), 
-      createLiteral(endOfArr[2], types)
+      operator, 
+      createLiteral(left, types), 
+      createLiteral(right, types)
     )
   );
 }
@@ -62,10 +64,14 @@ function generateLogicalExpression(array, types) {
  * @param {*} t 
  */
 function generateEndingBinaryExpression(array, types) {
+  const operator = array[1];
+  const left = array[0];
+  const right = array[2];
+
   return types.binaryExpression(
-    array[1], 
-    createLiteral(array[0], types), 
-    createLiteral(array[2], types)
+    operator, 
+    createLiteral(left, types), 
+    createLiteral(right, types)
   );
 }
 
@@ -76,19 +82,25 @@ function generateEndingBinaryExpression(array, types) {
  */
 function parseExpressionStatement(node, array) {
   if (node.type === 'BinaryExpression') {
-    array.push(node.right.value);
-    array.push(node.operator);
-    parseExpressionStatement(node.left, array);
-  } else  { // need to make this line generalized
-    array.push(node.value);
+    const rightValue = node.right.value;
+    const operator = node.operator;
+    const leftNode = node.left;
+
+    array.push(rightValue);
+    array.push(operator);
+    parseExpressionStatement(leftNode, array);
+  } else  {
+    const nodeValue = node.value;
+
+    array.push(nodeValue);
   }
 }
 
-module.exports = ({ types: t }) => (
+module.exports = ({ types }) => (
   {
     visitor: {
       ExpressionStatement(path) {
-        // also check if left side of binary expression is not equal to a binary express
+        // shortcircuit on unapplicable expressions
         if (path.node.expression.type !== 'BinaryExpression') return;
         if (path.node.expression.left.type !== 'BinaryExpression') return;
 
@@ -102,7 +114,7 @@ module.exports = ({ types: t }) => (
         array.reverse();
 
         // create replacement expression
-        const replacementExpression = generateExpressionStatement(array, t);
+        const replacementExpression = generateExpressionStatement(array, types);
 
         path.replaceWith(replacementExpression); 
 
