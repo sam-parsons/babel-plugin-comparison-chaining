@@ -40,24 +40,32 @@ function createLiteral(node, types) {
  */
 function generateLogicalExpression(t, array) {
   const endOfArr = array.slice(array.length - 3);
+  const endingLogicalExpressionArray = array.slice(0, array.length - 2);
 
   return t.logicalExpression(
     '&&', 
     array.length < 6 ? // detecting end of logical expression
-      t.binaryExpression(
-        array[array.length - 4], 
-        createLiteral(array[array.length - 5], t), 
-        createLiteral(array[array.length - 3], t)
-      ) :
-      generateLogicalExpression(
-        t, 
-        array.slice(0, array.length - 2)
-      ), 
+      // transform last five elements into proper chaining
+      generateEndingBinaryExpression(array, t) : 
+      generateLogicalExpression(t, endingLogicalExpressionArray), 
     t.binaryExpression(
       endOfArr[1], 
       createLiteral(endOfArr[0], t), 
       createLiteral(endOfArr[2], t)
     )
+  );
+}
+
+/**
+ * 
+ * @param {*} array 
+ * @param {*} t 
+ */
+function generateEndingBinaryExpression(array, t) {
+  return t.binaryExpression(
+    array[1], 
+    createLiteral(array[0], t), 
+    createLiteral(array[2], t)
   );
 }
 
