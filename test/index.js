@@ -3,7 +3,7 @@ import path from 'path';
 import { expect } from 'chai';
 import { transformFileSync } from 'babel-core';
 
-const skipArray = ['expression', 'iife'];
+const skipArray = ['iife'];
 
 describe('Comparison operator chaining', () => {
   const fixtures = path.join(__dirname, 'fixtures');
