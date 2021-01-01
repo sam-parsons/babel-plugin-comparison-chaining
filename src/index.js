@@ -1,9 +1,10 @@
 /**
- * 
+ * entry point to replacement process for exported module
+ *  
  * @param {*} array
  * @param {*} types
  */
-function generateExpressionStatement(array, types) {
+function generateReplacementExpression(array, types) {
   const endOfArray = generateEndOfArrayObject(array);
   const remainderExpression = array.slice(0, array.length - 2);
 
@@ -18,19 +19,12 @@ function generateExpressionStatement(array, types) {
 }
 
 /**
+ * generate logical expression in reverse direction
  * 
- * @param {*} node 
- * @param {*} types 
- */
-function createLiteral(node, types) {
-  switch (typeof node) {
-    case "string": return types.stringLiteral(node);
-    case "number": return types.numericLiteral(node);
-    default: return;
-  }
-}
-
-/**
+ * ex.
+ *  {       recursive call       } && 1 < 2
+ *  {  recursive call   } && 3 < 1 && 1 < 2
+ *  {   ...    } && 2 < 3 && 3 < 1 && 1 < 2
  * 
  * @param {*} array 
  * @param {*} types
@@ -57,6 +51,8 @@ function generateLogicalExpression(array, types) {
 }
 
 /**
+ * handle ending logical sequence
+ * kicks off generateEndingBinaryExpression
  * 
  * @param {*} array 
  * @param {*} types 
@@ -76,6 +72,7 @@ function generateEndingLogicalExpression(array, types) {
 }
 
 /**
+ * creates final binary expression in the replacement generation
  * 
  * @param {*} array 
  * @param {*} t 
@@ -92,6 +89,25 @@ function generateEndingBinaryExpression(array, types) {
   );
 }
 
+/**
+ * helper function for binary expression values
+ * 
+ * @param {*} node 
+ * @param {*} types 
+ */
+function createLiteral(node, types) {
+  switch (typeof node) {
+    case "string": return types.stringLiteral(node);
+    case "number": return types.numericLiteral(node);
+    default: return;
+  }
+}
+
+/**
+ * helper function - generates object from part of expression currently worked on
+ * 
+ * @param {*} array 
+ */
 function generateEndOfArrayObject(array) {
   const endOfArr = array.slice(array.length - 3);
   const operator = endOfArr[1];
@@ -135,7 +151,6 @@ function parseBinaryExpression(node, array) {
   const rightValue = node.right.value;
   const operator = node.operator;
   
-  // 
   array.push(rightValue);
   array.push(operator);
 
@@ -162,7 +177,7 @@ module.exports = ({ types }) => (
         array.reverse();
 
         // create replacement expression
-        const replacementExpression = generateExpressionStatement(array, types);
+        const replacementExpression = generateReplacementExpression(array, types);
 
         path.replaceWith(replacementExpression); 
 
