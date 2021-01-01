@@ -166,8 +166,8 @@ module.exports = ({ types }) => (
       ExpressionStatement(path) {
         // shortcircuit on unapplicable expressions
         if (
-          path.node.expression.type !== 'BinaryExpression' || 
-          path.node.expression.left.type !== 'BinaryExpression'
+          !types.isBinaryExpression(path.node.expression) ||
+          !types.isBinaryExpression(path.node.expression.left)
         ) return;
 
         // seeding array with first two value
