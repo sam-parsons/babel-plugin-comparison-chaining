@@ -15,7 +15,8 @@ function generateReplacementExpression(array, types) {
       endOfArray.operator, 
       createLiteral(endOfArray.left, types), 
       createLiteral(endOfArray.right, types))
-  ));
+    )
+  );
 }
 
 /**
@@ -164,8 +165,10 @@ module.exports = ({ types }) => (
     visitor: {
       ExpressionStatement(path) {
         // shortcircuit on unapplicable expressions
-        if (path.node.expression.type !== 'BinaryExpression') return;
-        if (path.node.expression.left.type !== 'BinaryExpression') return;
+        if (
+          path.node.expression.type !== 'BinaryExpression' || 
+          path.node.expression.left.type !== 'BinaryExpression'
+        ) return;
 
         // seeding array with first two value
         const array = [path.node.expression.right.value, path.node.expression.operator];
