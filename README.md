@@ -15,6 +15,9 @@ JavaScript will recursively evaluate the right-most node compared against whatev
   ((1 < 6 < 4) < 2) < 7
  (((1 < 6) < 4) < 2) < 7
 ((((1) < 6) < 4) < 2) < 7
+
+// edge case
+1 < 2 < 3 < 2 // returns true
 ```
 
 Written expression evaluated linearly
