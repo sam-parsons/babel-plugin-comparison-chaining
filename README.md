@@ -23,7 +23,16 @@ JavaScript will recursively evaluate the right-most node compared against whatev
 Written expression evaluated linearly
 
 ```javascript
-1 < 6 && 6 < 4 && 4 < 2 && 2 < 7;
+// written
+1 < 6 < 4 < 2 < 7
+// transformed
+1 < 6 && 6 < 4 && 4 < 2 && 2 < 7
+
+// edge case
+// written
+1 < 2 < 3 < 2
+// transformed
+1 < 2 && 2 < 3 && 3 < 2 // returns false
 ```
 
 ## Installation
