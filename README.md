@@ -20,7 +20,7 @@ JavaScript will recursively evaluate the right-most node compared against whatev
 1 < 2 < 3 < 2 // returns true
 ```
 
-Written expression evaluated linearly
+Written expressions transformed into linear evaluation
 
 ```javascript
 // written
