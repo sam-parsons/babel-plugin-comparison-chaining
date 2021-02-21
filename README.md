@@ -1,6 +1,6 @@
 # babel-plugin-comparison-chaining
 
-Unlike the discipline of mathematics, JavaScript interpreters don't recognize chains of comparison operators as a linear sequence, but as recursive calls comparing the right-most node and everything to the left of the operator.  If a developer wishes to write conditionally chained expressions that are linearly evaluated, this plugin is of use.
+JavaScript interpreters don't recognize chains of comparison operators as a linear sequence, but as recursive calls comparing the right-most node and everything to the left of the operator.  If a developer wishes to write conditionally chained expressions that are linearly evaluated, this plugin is of use.
 
 ## Examples
 
