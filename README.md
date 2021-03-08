@@ -14,10 +14,17 @@ JavaScript will recursively evaluate the right-most node compared against whatev
    (1 < 6 < 4 < 2) < 7 
   ((1 < 6 < 4) < 2) < 7
  (((1 < 6) < 4) < 2) < 7
-((((1) < 6) < 4) < 2) < 7
 
 // edge case
 1 < 2 < 3 < 2 // returns true
+
+
+//evaluated
+   (1 < 2 < 3) < 2
+  ((1 < 2) < 3) < 2
+    (true < 3) < 2 // true coerces to 1
+         true < 2 // repeated coercion, returns true
+         
 ```
 
 Written expressions transformed into linear evaluation
