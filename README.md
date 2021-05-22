@@ -1,3 +1,13 @@
+[npm]: https://img.shields.io/npm/v/babel-plugin-comparison-chaining
+[npm-url]: https://www.npmjs.com/package/babel-plugin-comparison-chaining
+[size]: https://packagephobia.now.sh/badge?p=babel-plugin-comparison-chaining
+[size-url]: https://packagephobia.now.sh/result?p=babel-plugin-comparison-chaining
+
+[![npm][npm]][npm-url]
+[![size][size]][size-url]
+[![libera manifesto](https://img.shields.io/badge/libera-manifesto-lightgrey.svg)](https://liberamanifesto.com)
+
+
 # babel-plugin-comparison-chaining
 
 JavaScript interpreters don't recognize chains of comparison operators as a linear sequence, but as recursive calls comparing the right-most node and everything to the left of the operator.  If a developer wishes to write chained comparison expressions that are linearly evaluated, this plugin is of use.
